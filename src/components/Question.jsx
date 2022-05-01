@@ -1,8 +1,10 @@
 import React from 'react'
+import {nanoid} from 'nanoid'
 
-function Question() {
+function Question(props) {
     return(
-        <h1>Question</h1>
+        <p className="question-text" dangerouslySetInnerHTML={{__html: props.question}}>
+        </p>
     )
 }
 

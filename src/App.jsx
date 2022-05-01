@@ -1,68 +1,73 @@
 import React from 'react'
 import StartScreen from './components/StartScreen'
-import Question from './components/Question'
+import Quiz from './components/Quiz'
 import {nanoid} from 'nanoid'
 
 function App() {
   // State
   const [isStarted, setIsStarted] = React.useState(false)
+  const [isFinished, setIsFinished] = React.useState(false)
   const [questions, setQuestions] = React.useState([])
-
-  // Effects
-  React.useEffect(() => {
-    if (isStarted) {
-      pullAPI()
-    }
-  }, [isStarted])
+  const [score, setScore] = React.useState(0)
 
   // Functions
   function startQuiz() {
+    fetchAPI('https://opentdb.com/api.php?amount=5&difficulty=easy&type=multiple')
     setIsStarted(true)
+    setIsFinished(false)
+    setScore(0)
   }
 
-  function pullAPI() {
-    fetch('https://opentdb.com/api.php?amount=5&difficulty=easy&type=multiple')
+  function fetchAPI(url) {
+    fetch(url)
       .then(res => res.json())
-      .then(data => setQuestions(data.results))
+      .then(data => formatQuestions(data.results))
   }
 
-  function makeQuestion(question) {
-    const correctAnswer = question.correct_answer
-    let answers = question.incorrect_answers
-    answers.push(correctAnswer)
-
-    let shuffled = answers
-      .map(value => ({ value, sort: Math.random() }))
-      .sort((a, b) => a.sort - b.sort)
-      .map(({ value }) => value)
-
-    return(
-      {
+  function formatQuestions(data) {
+    const questionArray = data.map(question => {
+      return {
         id: nanoid(),
         question: question.question,
-        answers: shuffled,
-        correctAnswer: shuffled.indexOf(correctAnswer)
+        answers: [
+          ...question.incorrect_answers.map(answer => {
+            return {
+              id: nanoid(),
+              answer: answer,
+              isCorrect: false,
+              isSelected: false
+            }
+          }),
+          {
+            id: nanoid(),
+            answer: question.correct_answer,
+            isCorrect: true,
+            isSelected: false
+          }
+        ].sort(() => Math.random() - 0.5)   // not truly random
       }
-    )
+    })
+
+    setQuestions(questionArray)
   }
-
-  // Elements
-  const questionList = questions.map(question => {
-    const data = makeQuestion(question)
-    return(
-      <Question 
-        key={data.id}
-        id={data.id}
-        answers={data.answers}
-        correctAnswer={data.correctAnswer}
-      />
-    )
-  })
-
+  
   return(
     <div>
-      {!isStarted && <StartScreen handleClick={startQuiz}/>}
-      {isStarted && questionList}
+      {isStarted ? (
+        <Quiz
+          questions={questions}
+          setQuestions={setQuestions}
+          score={score}
+          setScore={setScore}
+          startQuiz={startQuiz}
+          isFinished={isFinished}
+          setIsFinished={setIsFinished}
+        />
+      ) : (
+        <StartScreen
+          handleClick={startQuiz}
+        />
+      )}
     </div>
   )
 }

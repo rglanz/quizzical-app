@@ -7,13 +7,15 @@ function StartScreen(props) {
         <section className="start-section">
             <img src={blob1} id="blob-1"/>
             <img src={blob2} id="blob-2"/>
+
             <div className="start-box">
                 <h1 className="start-title">Quizzical</h1>
+
                 <p className="start-description">Test your knowledge with the OpenTriviaDatabase API!</p>
+
                 <button
                     className="start-btn"
-                    onClick={() => props.handleClick()}
-                >Start Quiz!</button>
+                    onClick={props.handleClick}>Start Quiz!</button>
             </div>
         </section>
     )
