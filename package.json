@@ -12,7 +12,7 @@
     "react-scripts": "5.0.1",
     "web-vitals": "^2.1.4"
   },
-  "homepage": "http://rglanz.github.io/quizzical-app",
+  "homepage": "https://rglanz.github.io/quizzical-app",
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
@@ -20,9 +20,6 @@
     "eject": "react-scripts eject"
     "gh-pages": "gh-pages -d build",
     "deploy": "yarn build && yarn gh-pages"
-  },
-  "devDependencies": {
-    "gh-pages": "^3.1.0"
   },
   "eslintConfig": {
     "extends": [
@@ -41,5 +38,8 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+   "devDependencies": {
+    "gh-pages": "^3.2.3"
   }
 }
